@@ -9,19 +9,23 @@
 <h:body>
     <h:form enctype="multipart/form-data">
         <p:growl id="messages" showDetail="true" />
-
-        <p:fileUpload value="#{fileUpload.file}" mode="simple" skinSimple="true" />
+        <p:outputLabel value="Click Choose to upload a file: " />
+        <p:fileUpload id="registryUpload" value="#{fileUpload.file}" mode="simple" skinSimple="true" sizeLimit="500000"
+            invalidSizeMessage="File size cannot excede 500 KB" />
 
         <p:commandButton value="Submit" ajax="false" actionListener="#{fileUpload.upload}" />
     </h:form>
     <h:form id="taxmanager-form">
 
         <p:panel header="Tax Manager Inventory Control">
-            <h:panelGrid columns="2" cellpadding="4">
+            <h:panelGrid columns="1" >
                 <p:textEditor widgetVar="inventoryText" value="#{fileUpload.text}" disabled="true" height="300" style="margin-bottom:10px" />
+            </h:panelGrid>
+            <h:panelGrid columns="2" cellpadding="4">
                 <p:commandButton value="Submit" update="display" oncomplete="PF('dlg').show()" icon="ui-icon-disk" />
                 <p:commandButton value="Clear" type="button" onclick="PF('inventoryText').clear();" icon="ui-icon-close" />
             </h:panelGrid>
+
         </p:panel>
 
         <p:dialog header="Content" widgetVar="dlg" showEffect="fade" hideEffect="fade">
