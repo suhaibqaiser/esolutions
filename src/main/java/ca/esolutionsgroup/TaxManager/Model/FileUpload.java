@@ -38,10 +38,13 @@ public class FileUpload {
      
     public void upload() {
         try {
+            if(!validateFileSize()) {
+                FacesMessage message = new FacesMessage("Error", "File size cannot excede 500 KB");
+                FacesContext.getCurrentInstance().addMessage(null, message); 
+            }
             if(file != null) {
                 Scanner s = new Scanner(this.file.getInputstream()).useDelimiter("\\A");
                 this.text = s.hasNext() ? s.next() : "";
-                s.close();
                 FacesMessage message = new FacesMessage("Succesful", file.getFileName() + " is uploaded.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
             }
@@ -51,4 +54,12 @@ public class FileUpload {
         }
         
     }
+
+    private boolean validateFileSize() {
+        if(this.file.getContents() != null && this.file.getContents().length > 500000) {
+            return false;
+        }
+        return true;
+    }
+
 }
