@@ -1,37 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-  xmlns:h="http://java.sun.com/jsf/html"
-  xmlns:p="http://primefaces.org/ui">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui">
 
 <h:head>
-  <title>Tax Manager Application</title>
+    <title>Tax Manager Application</title>
 </h:head>
 
 <h:body>
-  <h:form id="taxmanager-form">
+    <h:form enctype="multipart/form-data">
+        <p:growl id="messages" showDetail="true" />
 
-    <p:panel header="Tax Manager Inventory Control">
-      <h:panelGrid columns="2" cellpadding="4">
-        <h:outputText value="First Name: " />
-        <p:inputText id="first-name" value="#{inventory.firstName}" />
+        <p:fileUpload value="#{fileUpload.file}" mode="simple" skinSimple="true" />
 
-        <h:outputText value="Last Name: " />
-        <p:inputText id="last-name" value="#{inventory.lastName}" />
+        <p:commandButton value="Submit" ajax="false" actionListener="#{fileUpload.upload}" />
+    </h:form>
+    <h:form id="taxmanager-form">
 
-        <p:commandButton id="submit" value="Submit"
-          update="greeting-panel"
-          oncomplete="PF('greetingDialog').show()" />
-      </h:panelGrid>
-    </p:panel>
+        <p:panel header="Tax Manager Inventory Control">
+            <h:panelGrid columns="2" cellpadding="4">
+                <p:textEditor widgetVar="inventoryText" value="#{fileUpload.text}" disabled="true" height="300" style="margin-bottom:10px" />
+                <p:commandButton value="Submit" update="display" oncomplete="PF('dlg').show()" icon="ui-icon-disk" />
+                <p:commandButton value="Clear" type="button" onclick="PF('inventoryText').clear();" icon="ui-icon-close" />
+            </h:panelGrid>
+        </p:panel>
 
-    <p:dialog header="Greeting" widgetVar="greetingDialog"
-      modal="true" resizable="false">
-      <h:panelGrid id="greeting-panel" columns="1" cellpadding="4">
-        <h:outputText value="#{inventory.showGreeting()}" />
-      </h:panelGrid>
-    </p:dialog>
+        <p:dialog header="Content" widgetVar="dlg" showEffect="fade" hideEffect="fade">
+            <p:outputPanel id="display">
+                <h:outputText value="#{fileUpload.text}" escape="false" />
+            </p:outputPanel>
+        </p:dialog>
+        <p:dialog header="Greeting" widgetVar="greetingDialog" modal="true" resizable="false">
+            <h:panelGrid id="greeting-panel" columns="1" cellpadding="4">
+                <h:outputText value="#{inventory.showGreeting()}" />
+            </h:panelGrid>
+        </p:dialog>
 
-  </h:form>
+    </h:form>
 </h:body>
+
 </html>
