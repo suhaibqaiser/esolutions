@@ -70,6 +70,7 @@ public class FileUpload {
                 Scanner s = new Scanner(this.file.getInputstream()).useDelimiter("\\A");
                 this.text = s.hasNext() ? s.next() : "";
                 this.inventory.setFileText(this.text);
+                this.inventory.setReceiptText("");
                 FacesMessage message = new FacesMessage("Succesful", file.getFileName() + " is uploaded.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
             }
