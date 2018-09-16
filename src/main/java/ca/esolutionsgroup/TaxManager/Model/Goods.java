@@ -1,6 +1,8 @@
 package ca.esolutionsgroup.TaxManager.Model;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 
 import javax.inject.Named;
 
@@ -12,11 +14,27 @@ public class Goods {
 
     private Integer quantity;
 
+    private static final BigDecimal DUTY_PERCENT = BigDecimal.valueOf(0.05D);
+
+    private static final BigDecimal TAX_PERCENT = BigDecimal.valueOf(0.10D);
+
+    private static final BigDecimal ROUND_PERCENT = BigDecimal.valueOf(20D);
+
+    private String[] foodItems = {"chocolate"};
+
+    private String[] bookItems = {"book"};
+
+    private String[] medicalItems = {"pills"};
+
     private String name = "";
 
     private boolean isImported = false;
 
     private BigDecimal price;
+
+    private BigDecimal salesTax;
+
+    private BigDecimal duty;
 
     @Override
     public String toString() {
@@ -32,9 +50,63 @@ public class Goods {
             returnValue.append(name + " ");
         }        
         if(price != null) {
-            returnValue.append(": " + price.toString());
+            returnValue.append(": " + getTotal().toString());
         }
         return returnValue.toString();
+    }
+
+    public BigDecimal getTotal() {
+        return price.add(getTotalTax()).setScale(2, RoundingMode.UP);
+    }
+
+    public BigDecimal getTotalTax() {
+        return customRound(salesTax.add(duty)).setScale(2, RoundingMode.UP);
+    }
+
+
+
+    public BigDecimal customRound(final BigDecimal input) {
+        if(input != null && input.doubleValue() > 0.0D) {
+            return input.multiply(ROUND_PERCENT).setScale(0, RoundingMode.UP).abs()
+            .setScale(2, RoundingMode.UP).divide(ROUND_PERCENT);
+        }
+        return input;
+        
+    }
+
+    private void applyTaxes() {
+        if(!isExempted()) {
+            salesTax = price.multiply(TAX_PERCENT);
+        } else {
+            salesTax = BigDecimal.ZERO;
+        }
+    }
+
+    private boolean isExempted() {
+        for(String item : foodItems) {
+            if(name.contains(item)) {
+                return true;
+            }
+        }
+        for(String item : bookItems) {
+            if(name.contains(item)) {
+                return true;
+            }
+        }
+        for(String item : medicalItems) {
+            if(name.contains(item)) {
+                return true;
+            }
+        }
+        return false;        
+    }
+
+    private void applyDuty() {
+        if(isImported) {
+            duty = price.multiply(DUTY_PERCENT);
+        } else {
+            duty = BigDecimal.ZERO;
+        }
     }
 
     public void appendName(final String value) {
@@ -69,7 +141,9 @@ public class Goods {
     }
 
     public void setPrice(final BigDecimal value) {
-        this.price = value;
+        this.price = value;        
+        applyTaxes();
+        applyDuty();
     }
 
 }

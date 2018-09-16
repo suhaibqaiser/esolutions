@@ -11,7 +11,7 @@
         <p:growl id="messages" showDetail="true" />
         <p:outputLabel value="Click 'Choose' to select and click 'Upload' to upload that file: " />
         <p:fileUpload id="registryUpload" fileUploadListener="#{fileUpload.handleFileUpload}" mode="advanced" dragDropSupport="false"
-           update="messages taxmanager-form" sizeLimit="500000" fileLimit="1" allowTypes="/(\.|\/)(txt)$/" 
+           update="messages taxmanager-form" sizeLimit="500000" fileLimit="5" allowTypes="/(\.|\/)(txt)$/" 
            invalidFileMessage="File is Invalid. Only TXT files are allowed" 
            invalidSizeMessage="File size cannot excede 500 KB"/>
     </h:form>
