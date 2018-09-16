@@ -9,34 +9,32 @@
 <h:body>
     <h:form enctype="multipart/form-data">
         <p:growl id="messages" showDetail="true" />
-        <p:outputLabel value="Click Choose to upload a file: " />
-        <p:fileUpload id="registryUpload" value="#{fileUpload.file}" mode="simple" skinSimple="true" sizeLimit="500000"
-            invalidSizeMessage="File size cannot excede 500 KB" />
-
-        <p:commandButton value="Submit" ajax="false" actionListener="#{fileUpload.upload}" />
+        <p:outputLabel value="Click 'Choose' to select and click 'Upload' to upload that file: " />
+        <p:fileUpload id="registryUpload" fileUploadListener="#{fileUpload.handleFileUpload}" mode="advanced" dragDropSupport="false"
+           update="messages taxmanager-form" sizeLimit="500000" fileLimit="1" allowTypes="/(\.|\/)(txt)$/" 
+           invalidFileMessage="File is Invalid. Only TXT files are allowed" 
+           invalidSizeMessage="File size cannot excede 500 KB"/>
     </h:form>
     <h:form id="taxmanager-form">
 
         <p:panel header="Tax Manager Inventory Control">
-            <h:panelGrid columns="1" >
-                <p:textEditor widgetVar="inventoryText" value="#{fileUpload.text}" disabled="true" height="300" style="margin-bottom:10px" />
+            <h:panelGrid columns="2" >
+                <h:outputLabel value="Inventory Data Input" />
+                <h:outputLabel value="Inventory Data Output" />
+                <p:inputTextarea id="inputText" widgetVar="inventoryTextInput" value="#{inventory.fileText}" readonly="true" rows="10" cols="60" style="margin-bottom:10px" />
+                <p:inputTextarea id="outputText" widgetVar="inventoryTextOutput" value="#{inventory.receiptText}" readonly="true" rows="10" cols="60" style="margin-bottom:10px" />
             </h:panelGrid>
             <h:panelGrid columns="2" cellpadding="4">
-                <p:commandButton value="Submit" update="display" oncomplete="PF('dlg').show()" icon="ui-icon-disk" />
-                <p:commandButton value="Clear" type="button" onclick="PF('inventoryText').clear();" icon="ui-icon-close" />
+                <p:commandButton value="Process" update="display outputText" actionListener="#{inventory.processInventory}" oncomplete="PF('dlg').show()" icon="ui-icon-disk" />
+                
             </h:panelGrid>
 
         </p:panel>
 
         <p:dialog header="Content" widgetVar="dlg" showEffect="fade" hideEffect="fade">
             <p:outputPanel id="display">
-                <h:outputText value="#{fileUpload.text}" escape="false" />
+                    <h:outputText value="#{inventory.showGreeting()}" />
             </p:outputPanel>
-        </p:dialog>
-        <p:dialog header="Greeting" widgetVar="greetingDialog" modal="true" resizable="false">
-            <h:panelGrid id="greeting-panel" columns="1" cellpadding="4">
-                <h:outputText value="#{inventory.showGreeting()}" />
-            </h:panelGrid>
         </p:dialog>
 
     </h:form>

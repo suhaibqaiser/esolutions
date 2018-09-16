@@ -1,6 +1,5 @@
 package ca.esolutionsgroup.TaxManager.Utils;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +10,7 @@ import java.util.List;
 public class Tokenizer {
 
     public enum TokenType {
-        QUANTITY, PRICE, IMPORTED, NAME;
+        QUANTITY, PRICE, IMPORTED, NAME, AT;
     }
 
     public static List<ItemToken> parseInputString(final String text) {
@@ -39,6 +38,8 @@ public class Tokenizer {
             return TokenType.QUANTITY;
         } else if (value != null && isDecimal(value)) {
             return TokenType.PRICE;
+        } else if (value != null && value.equalsIgnoreCase(TokenType.AT.name())) {
+            return TokenType.AT;
         } else {
             return TokenType.NAME;
         }
